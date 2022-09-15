@@ -62,10 +62,13 @@ func Routes(router *gin.Engine) {
 	router.GET("/api/v1/welcome", Welcome)
 	router.GET("api/v1/getPersonalDetails", GetPersonalDetails)
 	router.POST("/api/v1/addPersonalDetails", AddPersonalDetails)
+	router.OPTIONS("/api/v1/addPersonalDetails", AddPersonalDetails)
 	router.PUT("/api/v1/updatePersonalDetails", UpdatePersonalDetails)
 	router.DELETE("/api/v1/deletePersonalDetails", DeletePersonalDetails)
 	router.POST("/api/v1/addGovtIdDetails", AddGovtIdDetails)
+	router.OPTIONS("/api/v1/addGovtIdDetails", AddGovtIdDetails)
 	router.POST("/api/v1/addAddressDetails", AddAddressDetails)
+	router.OPTIONS("/api/v1/addAddressDetails", AddAddressDetails)
 	router.NoRoute(notFound)
 }
 
@@ -80,6 +83,18 @@ func GetPersonalDetails(c *gin.Context) {
 }
 
 func AddPersonalDetails(c *gin.Context) {
+
+	// ------------------for_option_request-----------
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(204)
+		return
+	}
+	// -------------------for_option_request----------------
 	var personalDetails PersonalDetails
 	err := c.ShouldBindJSON(&personalDetails)
 	if err != nil {
@@ -124,6 +139,17 @@ func DeletePersonalDetails(c *gin.Context) {
 }
 
 func AddGovtIdDetails(c *gin.Context) {
+	// ------------------for_option_request-----------
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(204)
+		return
+	}
+	// -------------------for_option_request----------------
 	var govtIdDetails GovtIdDetails
 	err := c.ShouldBindJSON(&govtIdDetails)
 	if err != nil {
@@ -156,6 +182,17 @@ func AddGovtIdDetails(c *gin.Context) {
 }
 
 func AddAddressDetails(c *gin.Context) {
+	// ------------------for_option_request-----------
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(204)
+		return
+	}
+	// -------------------for_option_request----------------
 	var addressDetails AddressDetails
 	err := c.ShouldBindJSON(&addressDetails)
 	if err != nil {
