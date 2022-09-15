@@ -14,7 +14,8 @@ import (
 
 // PersonalDetails STRUCT
 type PersonalDetails struct {
-	Username  string `json:"username"`
+	// personal_details struct{} `pg: "personal_details"`
+	Username  string `json:"username" pg:"username,pk"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Email     string `json:"email"`
@@ -35,6 +36,14 @@ type AddressDetails struct {
 	BuildingName string `json:"buildingName"`
 	City         string `json:"city"`
 	State        string `json:"state"`
+}
+
+type Test struct {
+	// tableName struct{} `pg:"test_table"`
+	ID     string `json:"id" pg:"id,pk"`
+	Name   string `json:"name,omitempty" pg:"name"`
+	HP     string `json:"hp,omitempty" pg:"hp"`
+	Status string `json:"status,omitempty" pg:"status"`
 }
 
 // CONNECTING TO DB
@@ -67,8 +76,10 @@ func Routes(router *gin.Engine) {
 	router.DELETE("/api/v1/deletePersonalDetails", DeletePersonalDetails)
 	router.POST("/api/v1/addGovtIdDetails", AddGovtIdDetails)
 	router.OPTIONS("/api/v1/addGovtIdDetails", AddGovtIdDetails)
+	router.GET("api/v1/getGovtIdDetails", GetGovtIdDetails)
 	router.POST("/api/v1/addAddressDetails", AddAddressDetails)
 	router.OPTIONS("/api/v1/addAddressDetails", AddAddressDetails)
+	router.GET("api/v1/getAddressDetails", GetAddressDetails)
 	router.NoRoute(notFound)
 }
 
@@ -78,9 +89,71 @@ func Welcome(ctx *gin.Context) {
 	})
 }
 
+//	GET PERSONAL DETAILS *******************
+
 func GetPersonalDetails(c *gin.Context) {
+	username := c.Query("username")
+	var personalDetails PersonalDetails
+	err := dbConnect.Model(&personalDetails).Where("username=?", username).Select()
+	if err != nil {
+		// panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "failure",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg":  "success",
+		"data": personalDetails,
+	})
 
 }
+
+//	GET GOVERNMENT ID DETAILS *******************
+
+func GetGovtIdDetails(c *gin.Context) {
+	username := c.Query("username")
+	var govtIdDetails GovtIdDetails
+	err := dbConnect.Model(&govtIdDetails).Where("username=?", username).Select()
+	if err != nil {
+		// panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "failure",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg":  "success",
+		"data": govtIdDetails,
+	})
+
+}
+
+//	GET ADDRESS ID DETAILS *******************
+
+func GetAddressDetails(c *gin.Context) {
+	username := c.Query("username")
+	var addressDetails AddressDetails
+	err := dbConnect.Model(&addressDetails).Where("username=?", username).Select()
+	if err != nil {
+		// panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "failure",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg":  "success",
+		"data": addressDetails,
+	})
+
+}
+
+// func panicIf(err error) {
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// }
 
 func AddPersonalDetails(c *gin.Context) {
 
