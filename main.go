@@ -289,5 +289,5 @@ func main() {
 	Connect()
 	router := gin.Default()
 	Routes(router)
-	log.Fatal(router.Run(":3001"))
+	log.Fatal(router.Run(":8080"))
 }
